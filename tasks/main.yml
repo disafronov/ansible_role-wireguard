@@ -1,0 +1,40 @@
+---
+
+- name: Install wireguard
+  ansible.builtin.package:
+    name: wireguard
+    state: present
+
+- name: Fail on spaces in overlay file names
+  ansible.builtin.assert:
+    that:
+      - "' ' not in item.key"
+  with_dict: "{{ wireguard }}"
+  no_log: true
+
+- name: Template wireguard configs
+  when:
+    - item.value is defined
+    - item.value != None
+    - item.value | length > 0
+  with_dict: "{{ wireguard }}"
+  ansible.builtin.template:
+    src: wireguard.conf.j2
+    dest: "/etc/wireguard/wg{{ item.key }}.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  register: wireguard_service
+  no_log: true
+
+- name: (Re)start wireguard service
+  when:
+    - wireguard is defined
+    - wireguard != None
+    - wireguard | length > 0
+  with_items: "{{ wireguard_service.results | selectattr('changed', 'equalto', true) | map(attribute='item.key') | list | unique }}"
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: true
+    daemon_reload: true
+    name: "wg-quick@wg{{ item }}.service"
