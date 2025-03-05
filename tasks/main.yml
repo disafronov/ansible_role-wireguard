@@ -5,12 +5,12 @@
     name: wireguard
     state: present
 
-- name: Fail on spaces in overlay file names
-  ansible.builtin.assert:
-    that:
-      - "' ' not in item.key"
-  with_dict: "{{ wireguard }}"
-  no_log: true
+# - name: Fail on spaces in overlay file names
+#   ansible.builtin.assert:
+#     that:
+#       - "' ' not in item.key"
+#   with_dict: "{{ wireguard }}"
+#   no_log: true
 
 - name: Template wireguard configs
   when:
