@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.1] - 2025-03-05
+
+### 🚜 Refactor
+
+- Disable assert
+
 ## [2.0.0] - 2025-03-05
 
 ### 🚜 Refactor
