@@ -20,7 +20,7 @@
   with_dict: "{{ wireguard }}"
   ansible.builtin.template:
     src: wireguard.conf.j2
-    dest: "/etc/wireguard/wg{{ item.key }}.conf"
+    dest: "/etc/wireguard/{{ item.key }}.conf"
     owner: root
     group: root
     mode: "0644"
@@ -37,4 +37,4 @@
     state: restarted
     enabled: true
     daemon_reload: true
-    name: "wg-quick@wg{{ item }}.service"
+    name: "wg-quick@{{ item }}.service"
